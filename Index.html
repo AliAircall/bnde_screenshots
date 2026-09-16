@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeloTech Callback Agent</title>
+<style>
+  :root{
+    --bg:#faf8f5;
+    --surface:#ffffff;
+    --surface-2:#f2efe9;
+    --text:#1b2b28;
+    --text-dim:#5c6d69;
+    --accent:#0d7d63;
+    --accent-2:#c76a3e;
+    --accent-soft:#e3f2ec;
+    --border:#dfe2dc;
+    --code-bg:#101c1a;
+    --code-text:#d9ede6;
+    --code-dim:#7fa89b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#11191a;
+      --surface:#182322;
+      --surface-2:#1e2a28;
+      --text:#e9efec;
+      --text-dim:#9bb0aa;
+      --accent:#3fd7ab;
+      --accent-2:#e39a6e;
+      --accent-soft:#1d332c;
+      --border:#2b3937;
+      --code-bg:#0b1413;
+      --code-text:#cfe9e0;
+      --code-dim:#5f8b7d;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#11191a;
+    --surface:#182322;
+    --surface-2:#1e2a28;
+    --text:#e9efec;
+    --text-dim:#9bb0aa;
+    --accent:#3fd7ab;
+    --accent-2:#e39a6e;
+    --accent-soft:#1d332c;
+    --border:#2b3937;
+    --code-bg:#0b1413;
+    --code-text:#cfe9e0;
+    --code-dim:#5f8b7d;
+  }
+
+  * { box-sizing:border-box; }
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding:0 20px;
+    padding-block:48px;
+    line-height:1.65;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  h1,h2,h3{
+    font-family:"Fraunces", Georgia, "Times New Roman", serif;
+    font-weight:600;
+    text-wrap:balance;
+    color:var(--text);
+    margin:0;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:5px 12px;
+    margin-bottom:18px;
+  }
+
+  header.hero{
+    padding-bottom:36px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+
+  h1.title{
+    font-size:clamp(28px,5vw,40px);
+    line-height:1.1;
+    margin-bottom:14px;
+  }
+
+  .dek{
+    font-size:16px;
+    color:var(--text-dim);
+    max-width:60ch;
+  }
+
+  .company-tags{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+    flex-wrap:wrap;
+  }
+  .tag{
+    font-size:12.5px;
+    font-family:"IBM Plex Mono", monospace;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:4px 10px;
+    color:var(--text-dim);
+  }
+
+  .checklist{
+    list-style:none;
+    margin:24px 0 0;
+    padding:0;
+    display:grid;
+    gap:10px;
+  }
+  .checklist li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:14.5px;
+  }
+  .checklist .mark{
+    flex:none;
+    width:20px;
+    height:20px;
+    border-radius:5px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    margin-top:1px;
+  }
+
+  .section-label{
+    font-size:15px;
+    font-family:"IBM Plex Mono",monospace;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-dim);
+    margin-bottom:24px;
+  }
+
+  section.step{
+    display:grid;
+    grid-template-columns:44px 1fr;
+    gap:20px;
+    margin-bottom:44px;
+  }
+  .step-num{
+    font-family:"Fraunces", serif;
+    font-size:22px;
+    font-weight:600;
+    color:var(--accent);
+    background:var(--accent-soft);
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .step-rail{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .step-line{
+    flex:1;
+    width:1px;
+    background:var(--border);
+    margin-top:10px;
+  }
+  .step-body h2{
+    font-size:20px;
+    margin-bottom:6px;
+  }
+  .step-body .lead{
+    color:var(--text-dim);
+    font-size:14px;
+    margin-bottom:16px;
+  }
+
+  .action-list{
+    margin:0 0 16px;
+    padding:0;
+    list-style:none;
+    display:grid;
+    gap:8px;
+    counter-reset:action-item;
+  }
+  .action-list li{
+    display:flex;
+    gap:10px;
+    font-size:14.5px;
+    counter-increment:action-item;
+  }
+  .action-list li::before{
+    content:counter(action-item);
+    flex:none;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent-2);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:1px;
+  }
+
+  .tip{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent-2);
+    border-radius:0 8px 8px 0;
+    padding:12px 16px;
+    font-size:13.5px;
+    color:var(--text-dim);
+    margin:14px 0;
+  }
+  .tip b{ color:var(--text); }
+
+  .mock{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 18px;
+    margin:14px 0;
+    display:grid;
+    gap:12px;
+  }
+  .field{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:10px;
+    align-items:baseline;
+    font-size:13.5px;
+  }
+  .field label{
+    color:var(--text-dim);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding-top:2px;
+  }
+  .field .val{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:6px 10px;
+  }
+  .field-row{
+    display:flex;
+    gap:10px;
+  }
+  .field-row .val{ flex:1; }
+
+  .step-screenshot{
+    margin:16px 0 0;
+    border:2px dashed var(--border);
+    border-radius:12px;
+    padding:10px;
+    background:var(--surface-2);
+  }
+  .step-screenshot img{
+    display:block;
+    width:100%;
+    border-radius:8px;
+  }
+  .step-screenshot figcaption{
+    margin-top:8px;
+    font-size:12px;
+    color:var(--text-dim);
+    text-align:center;
+    font-family:"IBM Plex Mono", monospace;
+  }
+
+  pre{
+    background:var(--code-bg);
+    color:var(--code-text);
+    border-radius:10px;
+    padding:18px 20px;
+    overflow-x:auto;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    line-height:1.7;
+    margin:14px 0;
+  }
+  pre .h2{ color:var(--code-text); font-weight:700; }
+  code{
+    font-family:"IBM Plex Mono", monospace;
+  }
+  .inline-code{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:1px 6px;
+    font-size:13px;
+  }
+
+  .qa-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:10px;
+  }
+  .qa-card .q{ font-weight:600; font-size:14.5px; margin-bottom:4px; }
+  .qa-card .a{ font-size:13px; color:var(--text-dim); }
+
+  .voicemail{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+  }
+  .voicemail .opt{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:8px 0;
+    font-size:14px;
+  }
+  .voicemail .opt.selected{ color:var(--accent); font-weight:600; }
+  .radio{
+    flex:none;
+    width:16px;height:16px;
+    border-radius:50%;
+    border:2px solid var(--border);
+    margin-top:3px;
+  }
+  .radio.on{
+    border-color:var(--accent);
+    background:radial-gradient(circle, var(--accent) 0 40%, transparent 44%);
+  }
+  .vm-msg{
+    margin-top:10px;
+    background:var(--surface-2);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:13.5px;
+    font-style:italic;
+    color:var(--text);
+  }
+
+  footer{
+    margin-top:50px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-dim);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  @media (max-width:520px){
+    section.step{ grid-template-columns:36px 1fr; }
+    .step-num{ width:36px; height:36px; font-size:18px; }
+    .field{ grid-template-columns:1fr; }
+  }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">📞 Aircall Builder's Night</span>
+    <h1 class="title">Outbound AI Voice Agent for VeloTech</h1>
+    <p class="dek">VeloTech sells fleet management software. The moment a lead submits a demo request, this agent calls them back, qualifies them through natural conversation, and logs everything for the sales team — no human touches the first call.</p>
+    <div class="company-tags">
+      <span class="tag">B2B SaaS · Fleet Management</span>
+      <span class="tag">Outbound · Voice AI</span>
+      <span class="tag">Aircall Dashboard</span>
+    </div>
+
+    <ul class="checklist">
+      <li><span class="mark">✓</span> An outbound agent that calls leads immediately after a demo request</li>
+      <li><span class="mark">✓</span> A structured qualification conversation covering intent, fit, and decision-making</li>
+      <li><span class="mark">✓</span> Voicemail handling when no one picks up</li>
+    </ul>
+  </header>
+
+  <div class="section-label">Build steps</div>
+
+  <!-- STEP 1 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">1</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Create your outbound AI virtual agent</h2>
+      <p class="lead">Set up the agent shell in the Aircall dashboard before touching any scripts.</p>
+      <ul class="action-list">
+        <li>In the Aircall dashboard, open <b>AI Voice Agents</b></li>
+        <li>Click <b>Build an AI Voice Agent</b> and select <b>Outbound</b></li>
+        <li>Give it a name that reflects VeloTech and the purpose of this agent</li>
+        <li>Choose its spoken language and its voice</li>
+      </ul>
+
+      <figure class="step-screenshot">
+        <img src="PASTE-SCREENSHOT-URL-HERE" alt="Screenshot — Step 1: creating the outbound AI virtual agent">
+        <figcaption>Screenshot — Step 1</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">2</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Write the agent's opening message</h2>
+      <p class="lead">The first five seconds decide whether the lead stays on the line.</p>
+      <ul class="action-list">
+        <li>Go to the <b>Call script</b> tab in the agent settings</li>
+        <li>Find the <b>First message</b> field</li>
+        <li>Write a short, natural greeting that identifies who is calling and why</li>
+        <li>Add variables like <span class="inline-code">&#123;&#123;name&#125;&#125;</span> by wrapping the variable name in double curly brackets</li>
+      </ul>
+
+      <div class="tip"><b>Tip 1 —</b> the opening and farewell message are read exactly out loud, word for word. Write precisely what you want said, in the language you want it said in.</div>
+      <div class="tip"><b>Tip 2 —</b> imagine you just submitted a demo request form. What would you actually want to hear in the first five seconds?</div>
+
+      <figure class="step-screenshot">
+        <img src="PASTE-SCREENSHOT-URL-HERE" alt="Screenshot — Step 2: the First message field">
+        <figcaption>Screenshot — Step 2</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">3</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Write the agent's behaviour prompt</h2>
+      <p class="lead">This is the agent's brain: tone, goals, and every branch a real conversation can take.</p>
+      <ul class="action-list">
+        <li>In <b>Call script → Conversation guidelines</b>, describe the agent's tone and overall goal</li>
+        <li>Tell it what to do if the prospect starts asking questions back</li>
+        <li>Add the steps of qualification the agent must follow (e.g. "Step 1: ask …")</li>
+        <li>Define when the call is done — what a complete, successful conversation looks like</li>
+      </ul>
+
+      <div class="tip"><b>Tip —</b> think about what a great first call from your best SDR looks like, then write the prompt so the agent behaves the same way. Use Markdown to keep it well structured.</div>
+
+      <figure class="step-screenshot">
+        <img src="PASTE-SCREENSHOT-URL-HERE" alt="Screenshot — Step 3: the Conversation guidelines field">
+        <figcaption>Screenshot — Step 3</figcaption>
+      </figure>
+
+<pre><span class="h2"># Conversation guidelines</span>
+
+<span class="h2">## Identity &amp; Transparency</span>
+- Always identify yourself as an AI assistant calling on behalf of Aircall at
+  the start of the call
+- Never claim or imply you are a human, even if asked directly
+- If asked whether you are a bot or AI, confirm it clearly and without hesitation
+
+<span class="h2">## Greeting &amp; Availability Check</span>
+- Greet the callee by their first name: "Hi &#123;&#123;first_name&#125;&#125;"
+- Reference the form they submitted as the reason for the call — do not treat
+  this as a cold call
+- Confirm it is a good time before proceeding
+- If it is NOT a good time: acknowledge it, offer a callback, and end
+  gracefully — do not push forward
+- If no response or unclear: ask once more, then offer a callback and close
+  politely
+
+<span class="h2">## Purpose &amp; Flow</span>
+- State the purpose in one sentence: to ask a couple of quick questions and
+  connect them with the right person on the Aircall team
+- Ask only one question at a time — never stack multiple questions in a
+  single turn
+- Keep the conversation tight — this is a qualification call, not a demo
+  or pitch
+- If the callee seems confused, remind them of the form they submitted —
+  once, naturally
+
+<span class="h2">## Qualification Questions</span> (ask in order, skip if already answered in the form)
+- What does your team's current phone setup look like? (current stack)
+- How many people on your team are regularly on calls with customers or
+  prospects? (volume signal)
+- What made you reach out to Aircall today — anything specific you are
+  looking to solve? (intent signal)
+- Are you the right person to evaluate this, or is someone else involved
+  in the decision? (buyer check)
+
+<span class="h2">## Qualification Signals</span>
+- Strong fit: 5+ phone users, clear pain or intent stated, decision-maker
+  on the line or accessible
+- Weak fit: solo operator, no real call volume, vague intent, no path to
+  a decision-maker
+- Mixed signals: do not force it — offer to have a teammate reach out for
+  a proper conversation
+
+<span class="h2">## Information Collection</span>
+- Only collect what is needed to route them correctly
+- Confirm follow-up details before closing (best email, preferred
+  callback time)
+- Never invent or assume information the callee has not provided
+
+<span class="h2">## Next Steps &amp; Handoff</span>
+- If qualified: confirm next steps clearly — "I'll pass your details to
+  our team and someone will be in touch to set up a call. Does that work?"
+- If not qualified: thank them genuinely and close politely — do not
+  attempt to re-engage
+- If they want to speak with someone now: initiate a transfer or confirm
+  a teammate will call back promptly
+
+<span class="h2">## Escalation &amp; Transfer</span>
+- If asked about pricing, features, integrations, or anything
+  account-specific: do not attempt to answer — offer to connect them
+  with a teammate
+- If the callee requests a human at any point, initiate the transfer
+  promptly
+- If transfer is unavailable, confirm a teammate will follow up and
+  specify how (call or email)
+
+<span class="h2">## Handling Objections &amp; Disengagement</span>
+- If not interested: acknowledge politely and close — never push or
+  repeat the pitch
+- If they ask not to be contacted again: acknowledge immediately and end
+  the call — do not attempt to re-engage
+- If upset or frustrated: stay calm, offer a brief apology, offer a
+  handoff or close politely — never argue
+
+<span class="h2">## Accuracy &amp; Integrity</span>
+- Never speculate on pricing, product capabilities, or timelines
+- If you do not have the answer, say so and offer to have the right
+  person follow up
+- Never make commitments on behalf of Aircall that were not explicitly
+  scripted</pre>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">4</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Define the qualification questions</h2>
+      <p class="lead">Structured intake questions the agent works through naturally during the call.</p>
+      <ul class="action-list">
+        <li>Go to the <b>Intake questions</b> section</li>
+        <li>Write 3–4 questions the agent will work through naturally during the call</li>
+        <li>Cover: company context, the problem they're solving, where they are in the buying process, and who else is involved</li>
+      </ul>
+
+      <div class="qa-card">
+        <div class="q">What is your company's name?</div>
+        <div class="a">Establishes context — used to route and personalize the rest of the call.</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">What made you reach out?</div>
+        <div class="a">Surfaces intent — the specific problem or trigger behind the demo request.</div>
+      </div>
+
+      <div class="tip">Any answers the virtual agent collects are saved as responses to these intake questions and logged both in the Aircall workspace and in any connected call-logging integrations.</div>
+
+      <figure class="step-screenshot">
+        <img src="PASTE-SCREENSHOT-URL-HERE" alt="Screenshot — Step 4: the Intake questions section">
+        <figcaption>Screenshot — Step 4</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">5</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Configure voicemail handling</h2>
+      <p class="lead">Not every call connects — make the miss count too.</p>
+      <ul class="action-list">
+        <li>Find the <b>Voicemail</b> section in the <b>Connect agent</b> tab</li>
+        <li>Select <b>Leave a message</b> for "If voicemail is detected"</li>
+        <li>Write a short message to leave if no one picks up</li>
+        <li>Include who's calling and give them a reason to expect a follow-up</li>
+      </ul>
+
+      <div class="voicemail">
+        <div class="opt"><div class="radio"></div> Hang up — end the call automatically when voicemail is detected</div>
+        <div class="opt selected"><div class="radio on"></div> Leave a message — play a pre-recorded message before hanging up</div>
+        <div class="vm-msg">"Hi, I'm reaching out from VeloTech. I haven't been able to reach you — if you'd like to reach us, you can call us at +49 12345678."</div>
+      </div>
+
+      <figure class="step-screenshot">
+        <img src="PASTE-SCREENSHOT-URL-HERE" alt="Screenshot — Step 5: the Voicemail section">
+        <figcaption>Screenshot — Step 5</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">6</div></div>
+    <div class="step-body">
+      <h2>Test your agent</h2>
+      <p class="lead">Ship it, call it, and listen back like a prospect would.</p>
+      <ul class="action-list">
+        <li>Save your configuration</li>
+        <li>Press the <b>Test agent call</b> button at the top right</li>
+      </ul>
+
+      <div class="tip"><b>Tip 1 —</b> did the greeting feel natural? Did the questions flow? Did the voicemail sound human? Adjust and test again — building an agent is an iterative, continuous process.</div>
+      <div class="tip"><b>Tip 2 —</b> hit multiple issues while testing? Focus on one at a time. Reproduce it, fix it, then retest before moving to the next.</div>
+
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/test.png?raw=true" alt="Screenshot — Step 6: testing the agent">
+        <figcaption>Screenshot — Step 6</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer>
+    <span>Aircall — Outbound Voice Agent Build Guide</span>
+    <span>Want to go deeper on CRM integrations? Book a session with an Aircall expert.</span>
+  </footer>
+
+</div>
+</body>
+</html>
