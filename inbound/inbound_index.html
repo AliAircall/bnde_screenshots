@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vantix Support &amp; Routing Agent</title>
+<style>
+  :root{
+    --bg:#fafcfb;
+    --surface:#ffffff;
+    --surface-2:#eef7f3;
+    --text:#0b1e2d;
+    --text-dim:#5b6b74;
+    --accent:#00b388;
+    --accent-2:#0b1e39;
+    --accent-soft:#e3f7ef;
+    --border:#dbe5e1;
+    --code-bg:#0b1e39;
+    --code-text:#e3f7ef;
+    --code-dim:#7fa9c9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0b1420;
+      --surface:#111d2b;
+      --surface-2:#152232;
+      --text:#eef3f1;
+      --text-dim:#9aaab8;
+      --accent:#2fe0ac;
+      --accent-2:#8fa8d9;
+      --accent-soft:#123328;
+      --border:#22323f;
+      --code-bg:#081019;
+      --code-text:#d7ffe9;
+      --code-dim:#5f8b7d;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1420;
+    --surface:#111d2b;
+    --surface-2:#152232;
+    --text:#eef3f1;
+    --text-dim:#9aaab8;
+    --accent:#2fe0ac;
+    --accent-2:#8fa8d9;
+    --accent-soft:#123328;
+    --border:#22323f;
+    --code-bg:#081019;
+    --code-text:#d7ffe9;
+    --code-dim:#5f8b7d;
+  }
+
+  * { box-sizing:border-box; }
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding:0 20px;
+    padding-block:48px;
+    line-height:1.65;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  h1,h2,h3{
+    font-family:"Fraunces", Georgia, "Times New Roman", serif;
+    font-weight:600;
+    text-wrap:balance;
+    color:var(--text);
+    margin:0;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:5px 12px;
+    margin-bottom:18px;
+  }
+
+  header.hero{
+    padding-bottom:36px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+
+  h1.title{
+    font-size:clamp(28px,5vw,40px);
+    line-height:1.1;
+    margin-bottom:14px;
+  }
+
+  .dek{
+    font-size:16px;
+    color:var(--text-dim);
+    max-width:60ch;
+  }
+
+  .company-tags{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+    flex-wrap:wrap;
+  }
+  .tag{
+    font-size:12.5px;
+    font-family:"IBM Plex Mono", monospace;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:4px 10px;
+    color:var(--text-dim);
+  }
+
+  .checklist{
+    list-style:none;
+    margin:24px 0 0;
+    padding:0;
+    display:grid;
+    gap:10px;
+  }
+  .checklist li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:14.5px;
+  }
+  .checklist .mark{
+    flex:none;
+    width:20px;
+    height:20px;
+    border-radius:5px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    margin-top:1px;
+  }
+
+  .section-label{
+    font-size:15px;
+    font-family:"IBM Plex Mono",monospace;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-dim);
+    margin-bottom:24px;
+  }
+
+  section.step{
+    display:grid;
+    grid-template-columns:44px 1fr;
+    gap:20px;
+    margin-bottom:44px;
+  }
+  .step-num{
+    font-family:"Fraunces", serif;
+    font-size:22px;
+    font-weight:600;
+    color:var(--accent);
+    background:var(--accent-soft);
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .step-rail{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .step-line{
+    flex:1;
+    width:1px;
+    background:var(--border);
+    margin-top:10px;
+  }
+  .step-body h2{
+    font-size:20px;
+    margin-bottom:6px;
+  }
+  .step-body .lead{
+    color:var(--text-dim);
+    font-size:14px;
+    margin-bottom:16px;
+  }
+
+  .action-list{
+    margin:0 0 16px;
+    padding:0;
+    list-style:none;
+    display:grid;
+    gap:8px;
+    counter-reset:action-item;
+  }
+  .action-list li{
+    display:flex;
+    gap:10px;
+    font-size:14.5px;
+    counter-increment:action-item;
+  }
+  .action-list li::before{
+    content:counter(action-item);
+    flex:none;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent-2);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:1px;
+  }
+
+  .tip{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent-2);
+    border-radius:0 8px 8px 0;
+    padding:12px 16px;
+    font-size:13.5px;
+    color:var(--text-dim);
+    margin:14px 0;
+  }
+  .tip b{ color:var(--text); }
+
+  .mock{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 18px;
+    margin:14px 0;
+    display:grid;
+    gap:12px;
+  }
+  .field{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:10px;
+    align-items:baseline;
+    font-size:13.5px;
+  }
+  .field label{
+    color:var(--text-dim);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding-top:2px;
+  }
+  .field .val{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:6px 10px;
+  }
+  .field-row{
+    display:flex;
+    gap:10px;
+  }
+  .field-row .val{ flex:1; }
+
+  .step-screenshot{
+    margin:16px 0 0;
+    border:2px dashed var(--border);
+    border-radius:12px;
+    padding:10px;
+    background:var(--surface-2);
+  }
+  .step-screenshot img{
+    display:block;
+    width:100%;
+    border-radius:8px;
+  }
+  .step-screenshot figcaption{
+    margin-top:8px;
+    font-size:12px;
+    color:var(--text-dim);
+    text-align:center;
+    font-family:"IBM Plex Mono", monospace;
+  }
+
+  pre{
+    background:var(--code-bg);
+    color:var(--code-text);
+    border-radius:10px;
+    padding:18px 20px;
+    overflow-x:auto;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    line-height:1.7;
+    margin:14px 0;
+  }
+  pre .h2{ color:var(--code-text); font-weight:700; }
+  code{
+    font-family:"IBM Plex Mono", monospace;
+  }
+  .inline-code{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:1px 6px;
+    font-size:13px;
+  }
+
+  .qa-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:10px;
+  }
+  .qa-card .q{ font-weight:600; font-size:14.5px; margin-bottom:4px; }
+  .qa-card .a{ font-size:13px; color:var(--text-dim); }
+
+  .voicemail{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+  }
+  .voicemail .opt{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:8px 0;
+    font-size:14px;
+  }
+  .voicemail .opt.selected{ color:var(--accent); font-weight:600; }
+  .radio{
+    flex:none;
+    width:16px;height:16px;
+    border-radius:50%;
+    border:2px solid var(--border);
+    margin-top:3px;
+  }
+  .radio.on{
+    border-color:var(--accent);
+    background:radial-gradient(circle, var(--accent) 0 40%, transparent 44%);
+  }
+  .vm-msg{
+    margin-top:10px;
+    background:var(--surface-2);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:13.5px;
+    font-style:italic;
+    color:var(--text);
+  }
+
+  footer{
+    margin-top:50px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-dim);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  @media (max-width:520px){
+    section.step{ grid-template-columns:36px 1fr; }
+    .step-num{ width:36px; height:36px; font-size:18px; }
+    .field{ grid-template-columns:1fr; }
+  }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">📞 Aircall Builder's Night</span>
+    <h1 class="title">Inbound Support &amp; Routing Agent for Vantix</h1>
+    <p class="dek">Vantix sells team workflow software. When someone calls the support line, this agent's first job is to figure out if they're an existing customer or a prospect — then either answer from the knowledge base or route straight to Sales.</p>
+    <div class="company-tags">
+      <span class="tag">B2B SaaS · Team Workflow Software</span>
+      <span class="tag">Inbound · Voice AI</span>
+      <span class="tag">Aircall Dashboard</span>
+    </div>
+
+    <ul class="checklist">
+      <li><span class="mark">✓</span> An inbound agent that greets callers and sorts them with one clear yes/no question</li>
+      <li><span class="mark">✓</span> A knowledge base covering the most common customer questions</li>
+      <li><span class="mark">✓</span> A routing rule that sends non-customers to Sales instead of trying to support them</li>
+      <li><span class="mark">✓</span> Full call logging so nothing gets lost</li>
+    </ul>
+  </header>
+
+  <div class="section-label">Build steps</div>
+
+  <!-- STEP 1 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">1</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Create your inbound AI virtual agent</h2>
+      <p class="lead">Set up the agent shell in the Aircall dashboard before touching any scripts.</p>
+      <ul class="action-list">
+        <li>In the Aircall dashboard, open <b>AI Voice Agents</b></li>
+        <li>Click <b>Create an AI Voice Agent</b> and select <b>Inbound</b></li>
+        <li>Give it a name that reflects Vantix and the support context</li>
+      </ul>
+
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/hello.png?raw=true" alt="Screenshot — Step 1: opening AI Voice Agents from the dashboard">
+        <figcaption>Screenshot — Step 1a</figcaption>
+      </figure>
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/choose_inbound.png?raw=true" alt="Screenshot — Step 1: selecting Inbound as the agent type">
+        <figcaption>Screenshot — Step 1b</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">2</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Write the agent's opening message</h2>
+      <p class="lead">This is the receptionist moment — the whole routing decision hinges on one clear yes/no question, asked right away.</p>
+      <ul class="action-list">
+        <li>Go to the <b>Call script</b> tab in the agent settings</li>
+        <li>Find the <b>Greeting message</b> field</li>
+        <li>Keep it to one question — don't add anything else</li>
+        <li>Example: "Hi, thanks for calling Vantix, I am an AI assistant! Quick question before we dive in, are you already a Vantix customer, or are you exploring Vantix for the first time?"</li>
+      </ul>
+
+      <div class="tip"><b>Tip 1 —</b> the opening and farewell message are read out loud word for word. Make sure to write exactly what you want to be said, in the desired language.</div>
+      <div class="tip"><b>Tip 2 —</b> imagine you're a customer calling in with a real problem. What's the fastest way to find out if you even belong on this line?</div>
+
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/greeting.png?raw=true" alt="Screenshot — Step 2: the Greeting message field">
+        <figcaption>Screenshot — Step 2</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">3</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Write the agent's behaviour prompt</h2>
+      <p class="lead">Two branches: existing customers get support-mode answers from the knowledge base, everyone else gets a clean handoff to Sales.</p>
+      <ul class="action-list">
+        <li>In <b>Call script → Conversation guidelines</b>, describe the agent's routing logic and tone</li>
+        <li>If they say yes (existing customer): switch into support mode and answer only from the knowledge base</li>
+        <li>If they say no (prospect / not yet a customer): don't pitch or answer product questions — explain the handoff to Sales and transfer</li>
+        <li>Define when a support conversation wraps up — once the question is answered or the agent has nothing more it can help with from the knowledge base</li>
+      </ul>
+
+      <div class="tip"><b>Tip 1 —</b> think of this as a receptionist who seamlessly becomes a support rep, not two separate people. The yes/no question is the only routing step.</div>
+      <div class="tip"><b>Tip 2 —</b> don't be afraid to experiment and play around with the prompt — see what works best for you and fulfills your requirements.</div>
+
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/branches.png?raw=true" alt="Screenshot — Step 3: the Conversation guidelines field">
+        <figcaption>Screenshot — Step 3</figcaption>
+      </figure>
+
+<pre><span class="h2">## Identity &amp; Routing</span>
+- Always ask the customer/prospect qualifying question first, before anything
+  else
+- If the caller is an existing customer: proceed to Support Mode
+- If the caller is not a customer, or unsure/exploring: proceed to Sales
+  Handoff
+- Ask one clarifying question if the answer is ambiguous, then make a routing
+  decision - don't loop
+
+<span class="h2">## Support Mode</span>
+- Answer only from the knowledge base
+- Ask one question at a time
+- If the answer isn't in the knowledge base, say so honestly and offer to
+  connect them with a human rather than guessing
+- Never invent pricing, features, or timelines
+
+<span class="h2">## Sales Handoff</span>
+- Do not attempt to answer product or pricing questions yourself
+- Explain briefly that you're connecting them with the Sales team
+- Initiate the transfer
+
+<span class="h2">## Closing</span>
+- Wrap up once the caller's question is answered or they've been handed off
+  to a human
+- Thank the caller before ending the call</pre>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">4</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Build the knowledge base</h2>
+      <p class="lead">A centralized library of information about Vantix — products, services, and frequently asked questions — that the agent refers to whenever it's asked a question.</p>
+      <ul class="action-list">
+        <li>Go to the <b>Knowledge sources</b> section of your agent</li>
+        <li>Add a <b>Block of content</b> as a knowledge source</li>
+        <li>Cover the questions a Vantix customer is likely to ask</li>
+        <li>Think about: resetting a password, understanding a bill or plan, exporting data, connecting an integration, cancelling a subscription</li>
+        <li>Write these as short, clear answers — the agent will use them to respond naturally</li>
+      </ul>
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/kb.png?raw=true" alt="Screenshot — Step 4: adding a knowledge source">
+        <figcaption>Screenshot — Step 4</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">5</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Set up the Sales transfer branch</h2>
+      <p class="lead">This is the routing mechanism — it's what turns the yes/no answer into an actual outcome instead of just a conversation.</p>
+      <ul class="action-list">
+        <li>Go to <b>Call transfer rules → Transfer branches</b></li>
+        <li>Add a branch, e.g. "New / Prospective Customer"</li>
+        <li>Set the trigger condition: the caller says they are not yet a customer, or asks about pricing, demos, or signing up</li>
+        <li>Write a short transfer message</li>
+      </ul>
+
+      <div class="mock">
+        <div class="field"><label>Branch name</label><div class="val">New / Prospective Customer</div></div>
+        <div class="field"><label>Trigger</label><div class="val">The caller says they are not yet a customer, are exploring Vantix for the first time, or asks about pricing, a demo, or signing up.</div></div>
+        <div class="field"><label>Message</label><div class="val">"Let me connect you with our Sales team who can help you get started."</div></div>
+      </div>
+
+      <div class="tip">This is the routing mechanism — it's what turns the yes/no answer into an actual outcome instead of just a conversation.</div>
+
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/branches.png?raw=true" alt="Screenshot — Step 5: editing the Sales transfer branch">
+        <figcaption>Screenshot — Step 5</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">6</div><div class="step-line"></div></div>
+    <div class="step-body">
+      <h2>Set up data capture for anything support can't resolve</h2>
+      <p class="lead">Make sure a human rep never has to start from zero.</p>
+      <ul class="action-list">
+        <li>Go to the <b>Intake questions</b> section</li>
+        <li>Write the questions the agent should ask if it can't fully resolve a request from the knowledge base</li>
+        <li>Cover: a short description of the issue, and the best callback number or email</li>
+      </ul>
+
+      <div class="qa-card">
+        <div class="q">Can you describe the issue in a bit more detail?</div>
+        <div class="a">Gives a human rep the context to pick up the conversation without starting over.</div>
+      </div>
+      <div class="qa-card">
+        <div class="q">What's the best number or email to reach you at?</div>
+        <div class="a">Ensures the follow-up can happen even if the caller can't be reached again immediately.</div>
+      </div>
+
+      <div class="tip">Don't use too many intake questions — only capture the information you really need. Keeping it light is the way to go.</div>
+
+    </div>
+  </section>
+
+  <!-- STEP 7 -->
+  <section class="step">
+    <div class="step-rail"><div class="step-num">7</div></div>
+    <div class="step-body">
+      <h2>Test your agent</h2>
+      <p class="lead">Save it, call it, and listen back like a customer would.</p>
+      <ul class="action-list">
+        <li>Save your configuration</li>
+        <li>Use the <b>Test agent call</b> button at the top right of the agent's settings page</li>
+      </ul>
+
+      <div class="tip"><b>Tip 1 —</b> did the yes/no question feel natural? Did the agent actually stop pitching once you said "no"? Adjust and test again.</div>
+      <div class="tip"><b>Tip 2 —</b> encountered multiple issues while testing? Focus on one problem at a time — reproduce it, fix it, then test it before moving on to the next.</div>
+
+      <figure class="step-screenshot">
+        <img src="https://github.com/AliAircall/bnde_screenshots/blob/master/inbound/test.png?raw=true" alt="Screenshot — Step 7: testing the agent">
+        <figcaption>Screenshot — Step 7</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer>
+    <span>Aircall — Inbound Voice Agent Build Guide</span>
+    <span>Want to go deeper on CRM integrations or your own use case? Scan the QR code to book a session with an Aircall expert.</span>
+  </footer>
+
+</div>
+</body>
+</html>
